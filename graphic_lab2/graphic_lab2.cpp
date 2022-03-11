@@ -3,13 +3,20 @@
 
 #include "framework.h"
 #include "graphic_lab2.h"
+#include "MyRect.h"
 
 #define MAX_LOADSTRING 100
 
+#define PI 3.14159265358979323846
+
+// макрос преобразования X градусов в радианы 
+#define gradToRad(x) x * PI/180 
 // Глобальные переменные:
 HINSTANCE hInst;                                // текущий экземпляр
 WCHAR szTitle[MAX_LOADSTRING];                  // Текст строки заголовка
 WCHAR szWindowClass[MAX_LOADSTRING];            // имя класса главного окна
+MyRect rectangle;
+float movingSpeed = 4.0f;
 
 // Отправить объявления функций, включенных в этот модуль кода:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -39,7 +46,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_GRAPHICLAB2));
-
     MSG msg;
 
     // Цикл основного сообщения:
@@ -141,13 +147,72 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 return DefWindowProc(hWnd, message, wParam, lParam);
             }
         }
+        InvalidateRect(hWnd, NULL, true);
+        UpdateWindow(hWnd);
         break;
+    case WM_KEYDOWN :
+    {
+        int key = LOWORD(wParam);
+        // Разобрать выбор в меню:
+        switch (key)
+        {
+        case 0x57:
+            rectangle.move(AXIS_Y, -movingSpeed);
+            break;
+        case 0x53:
+            rectangle.move(AXIS_Y, movingSpeed);
+            break;
+        case 0x41:
+            rectangle.move(AXIS_X, -movingSpeed);
+            break;
+        case 0x44:
+            rectangle.move(AXIS_X, movingSpeed);
+            break;
+        case 0x45:
+            rectangle.rotate(gradToRad(15));
+            break;
+        case 0x51:
+            rectangle.rotate(gradToRad(-15));
+            break;
+        case 0x52:
+            rectangle.scale(1.2f);
+            break;
+        case 0x46:
+            rectangle.scale(0.8f);
+            break;
+        case 0x1B:
+            PostQuitMessage(0);
+            break;
+        }
+    }
+    InvalidateRect(hWnd, NULL, true);
+    UpdateWindow(hWnd);
+    break;
     case WM_PAINT:
         {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Добавьте сюда любой код прорисовки, использующий HDC...
-            EndPaint(hWnd, &ps);
+        PAINTSTRUCT ps;
+        HDC hdc = BeginPaint(hWnd, &ps);// получение десриптора графического устройства
+
+        // создание совместимого битмапа для создания буфера(совпадает с клиенсткой областью), 
+        //в котором будет предварительная отрисовка окна для избежания мерцаний из-за постепеной отрисовки окна
+        HDC bufferDC = CreateCompatibleDC(hdc);
+        HBITMAP bufferBM = CreateCompatibleBitmap(hdc, ps.rcPaint.right - ps.rcPaint.left, ps.rcPaint.bottom - ps.rcPaint.top);
+
+        SelectObject(bufferDC, bufferBM);
+
+        //отрисовка:
+        // 
+        //Заполнение буфера белым цветом
+        FillRect(bufferDC, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
+       
+        rectangle.draw(bufferDC,RGB(0,0,255));
+
+        //Загрузка буфера в битмап графического устройства и освобождение памяти выделенной на буфер
+        BitBlt(hdc, 0, 0, ps.rcPaint.right - ps.rcPaint.left, ps.rcPaint.bottom - ps.rcPaint.top, bufferDC, 0, 0, SRCCOPY);
+        DeleteDC(bufferDC);
+        DeleteObject(bufferBM);
+
+        EndPaint(hWnd, &ps);
         }
         break;
     case WM_DESTROY:
