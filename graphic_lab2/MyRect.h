@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MYRECT_H
+#define MYRECT_H
 
 #include <Windows.h>
 
@@ -24,3 +25,4 @@ private:
 	wchar_t names[4][2] = { L"A",L"B",L"C",L"D" };
 };
 
+#endif 
