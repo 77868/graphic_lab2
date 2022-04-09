@@ -78,13 +78,16 @@ void MyRect::draw(HDC hdc,COLORREF color)
 	HPEN newPen = CreatePen(PS_SOLID, NULL, color);
 	//выбор нового пера с сохранением старого
 	HGDIOBJ prevPen = SelectObject(hdc, newPen);
+	for (size_t i=0;i<4;i++)
+	{
+		TextOut(hdc, static_cast<int>(cords[i].x), static_cast<int>(cords[i].y), names[i], 2);
+	}
 	for (size_t i = 0; i < 3; i++)
 	{
 		MoveToEx(hdc, static_cast<int>(cords[i].x), static_cast<int>(cords[i].y), nullptr);
 		LineTo(hdc, static_cast<int>(cords[i+1].x), static_cast<int>(cords[i+1].y));
-		TextOut(hdc, static_cast<int>(cords[i].x), static_cast<int>(cords[i].y),names[i],2);
 	}
-	TextOut(hdc, static_cast<int>(cords[3].x), static_cast<int>(cords[3].y), names[3], 2);
+
 	MoveToEx(hdc, static_cast<int>(cords[3].x), static_cast<int>(cords[3].y), nullptr);
 	LineTo(hdc, static_cast<int>(cords[0].x), static_cast<int>(cords[0].y));
 	//выбор старой кисти
