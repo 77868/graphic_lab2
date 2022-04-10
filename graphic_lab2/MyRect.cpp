@@ -1,7 +1,7 @@
 #include "MyRect.h"
 #include <cmath>
 
-MyRect::MyRect()
+MyRect::MyRect()// инилициализация координат вершин четырёхугольника
 {
 	cords[0].x = 10.0f;
 	cords[1].x = 10.0f;
@@ -13,7 +13,7 @@ MyRect::MyRect()
 	cords[2].y = 120.0f;
 	cords[3].y = 10.0f;
 }
-float MyRect::getMidleX()
+float MyRect::getMidleX()// нахождене координаты X точки, относительно которой выполняется вращение и масштабирование
 {
 	float result = 0;
 	for (size_t i = 0; i < 4; i++)
@@ -22,7 +22,7 @@ float MyRect::getMidleX()
 	}
 	return result;
 }
-float MyRect::getMidleY()
+float MyRect::getMidleY()// нахождене координаты Y точки, относительно которой выполняется вращение и масштабирование
 {
 	float result = 0;
 	for (size_t i = 0; i < 4; i++)
@@ -31,7 +31,7 @@ float MyRect::getMidleY()
 	}
 	return result;
 }
-void MyRect::move(unsigned int direction, float moving)
+void MyRect::move(unsigned int direction, float moving)// Перемещение объекта
 {
 	switch (direction)
 	{
@@ -51,7 +51,7 @@ void MyRect::move(unsigned int direction, float moving)
 		break;
 	}
 }
-void MyRect::rotate(float angle)
+void MyRect::rotate(float angle)//поворот объекта
 {
 	float midleX = getMidleX();
 	float midleY = getMidleY();
@@ -62,7 +62,7 @@ void MyRect::rotate(float angle)
 		cords[i].y = (tmp - midleX) * sin(angle) + (cords[i].y -midleY) * cos(angle) + midleY;
 	}
 }
-void MyRect::scale(float scale)
+void MyRect::scale(float scale)// масштабирование объекта
 {
 	float midleX = getMidleX();
 	float midleY = getMidleY();
@@ -78,11 +78,11 @@ void MyRect::draw(HDC hdc,COLORREF color)
 	HPEN newPen = CreatePen(PS_SOLID, NULL, color);
 	//выбор нового пера с сохранением старого
 	HGDIOBJ prevPen = SelectObject(hdc, newPen);
-	for (size_t i=0;i<4;i++)
+	for (size_t i=0;i<4;i++)// вывод имён вершин
 	{
 		TextOut(hdc, static_cast<int>(cords[i].x), static_cast<int>(cords[i].y), names[i], 2);
 	}
-	for (size_t i = 0; i < 3; i++)
+	for (size_t i = 0; i < 3; i++)//отрисовка граней четырёхугольника
 	{
 		MoveToEx(hdc, static_cast<int>(cords[i].x), static_cast<int>(cords[i].y), nullptr);
 		LineTo(hdc, static_cast<int>(cords[i+1].x), static_cast<int>(cords[i+1].y));

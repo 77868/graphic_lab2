@@ -15,8 +15,8 @@
 HINSTANCE hInst;                                // текущий экземпляр
 WCHAR szTitle[MAX_LOADSTRING];                  // Текст строки заголовка
 WCHAR szWindowClass[MAX_LOADSTRING];            // имя класса главного окна
-MyRect rectangle;
-float movingSpeed = 4.0f;
+MyRect rectangle;                               // отрисовываемый объект
+float movingSpeed = 4.0f;                       // скорость перемещения фигуры
 
 // Отправить объявления функций, включенных в этот модуль кода:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -32,7 +32,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // TODO: Разместите код здесь.
 
     // Инициализация глобальных строк
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -147,8 +146,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 return DefWindowProc(hWnd, message, wParam, lParam);
             }
         }
-        InvalidateRect(hWnd, NULL, true);
-        UpdateWindow(hWnd);
+        InvalidateRect(hWnd, NULL, true);//обзначение перерисовываемой области окна
+        UpdateWindow(hWnd);// отправление сообщения WM_PAINT
         break;
     case WM_KEYDOWN :
     {
@@ -156,37 +155,37 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         // Разобрать выбор в меню:
         switch (key)
         {
-        case 0x57:
+        case 0x57:// нажата клавиша W
             rectangle.move(AXIS_Y, -movingSpeed);
             break;
-        case 0x53:
+        case 0x53:// нажата клавиша S
             rectangle.move(AXIS_Y, movingSpeed);
             break;
-        case 0x41:
+        case 0x41:// нажата клавиша A
             rectangle.move(AXIS_X, -movingSpeed);
             break;
-        case 0x44:
+        case 0x44:// нажата клавиша D
             rectangle.move(AXIS_X, movingSpeed);
             break;
-        case 0x45:
+        case 0x45:// нажата клавиша E
             rectangle.rotate(gradToRad(15));
             break;
-        case 0x51:
+        case 0x51:// нажата клавиша q
             rectangle.rotate(gradToRad(-15));
             break;
-        case 0x52:
+        case 0x52:// нажата клавиша R
             rectangle.scale(1.2f);
             break;
-        case 0x46:
+        case 0x46:// нажата клавиша F
             rectangle.scale(0.8f);
             break;
-        case 0x1B:
+        case 0x1B:// // нажата клавиша ESC
             PostQuitMessage(0);
             break;
         }
     }
-    InvalidateRect(hWnd, NULL, true);
-    UpdateWindow(hWnd);
+    InvalidateRect(hWnd, NULL, true);//обзначение перерисовываемой области окна
+    UpdateWindow(hWnd);// отправление сообщения WM_PAINT
     break;
     case WM_PAINT:
         {
