@@ -16,7 +16,7 @@ HINSTANCE hInst;                                // текущий экземпл
 WCHAR szTitle[MAX_LOADSTRING];                  // Текст строки заголовка
 WCHAR szWindowClass[MAX_LOADSTRING];            // имя класса главного окна
 MyRect rectangle;
-float movingSpeed = 4.0f;
+float movingSpeed = 12.0f;
 
 // Отправить объявления функций, включенных в этот модуль кода:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -156,31 +156,31 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         // Разобрать выбор в меню:
         switch (key)
         {
-        case 0x57:
-            rectangle.move(AXIS_Y, -movingSpeed);
+        case 0x57://w
+            rectangle.move(0, -movingSpeed);// перемещение на movingSpeed в отрицательную сторону вдоль оси Y
             break;
-        case 0x53:
-            rectangle.move(AXIS_Y, movingSpeed);
+        case 0x53://s
+            rectangle.move(0, movingSpeed);// перемещение на movingSpeed в положительную сторону вдоль оси Y
             break;
-        case 0x41:
-            rectangle.move(AXIS_X, -movingSpeed);
+        case 0x41://a
+            rectangle.move(-movingSpeed,0);// перемещение на movingSpeed в отрицательную сторону вдоль оси X
             break;
-        case 0x44:
-            rectangle.move(AXIS_X, movingSpeed);
+        case 0x44://d
+            rectangle.move(movingSpeed, 0);// перемещение на movingSpeed в положительную сторону вдоль оси X
             break;
-        case 0x45:
-            rectangle.rotate(gradToRad(15));
+        case 0x45://e
+            rectangle.rotate(gradToRad(15));// поворот по часовой стрелке на 15 градусов
             break;
-        case 0x51:
-            rectangle.rotate(gradToRad(-15));
+        case 0x51://q
+            rectangle.rotate(gradToRad(-15));// поворот проотив часовой стрелке на 15 градусов
             break;
-        case 0x52:
-            rectangle.scale(1.2f);
+        case 0x52://r
+            rectangle.scale(1.2f);// увеличение размеров
             break;
-        case 0x46:
-            rectangle.scale(0.8f);
+        case 0x46://f
+            rectangle.scale(0.8f);// умегьшение размеров
             break;
-        case 0x1B:
+        case 0x1B://ESC
             PostQuitMessage(0);
             break;
         }
@@ -205,7 +205,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         //Заполнение буфера белым цветом
         FillRect(bufferDC, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
        
-        rectangle.draw(bufferDC,RGB(0,0,255));
+        rectangle.draw(bufferDC,RGB(0,0,255));// отрисовка объекта в bufferDC и заполнение синим цветом
 
         //Загрузка буфера в битмап графического устройства и освобождение памяти выделенной на буфер
         BitBlt(hdc, 0, 0, ps.rcPaint.right - ps.rcPaint.left, ps.rcPaint.bottom - ps.rcPaint.top, bufferDC, 0, 0, SRCCOPY);

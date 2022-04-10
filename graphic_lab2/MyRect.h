@@ -3,13 +3,6 @@
 
 #include <Windows.h>
 
-#define AXIS_Y 0
-#define AXIS_X 1
-
-struct POINT_f
-{
-	float x, y;
-};
 class MyRect
 {
 public:
@@ -17,12 +10,13 @@ public:
 	void draw(HDC hdc,COLORREF color);
 	void rotate(float angle);
 	void scale(float scale);
-	void move(unsigned int direction, float speed);
-	float getMidleX();
-	float getMidleY();
+	void move(float moveX, float moveY);
+	float getMiddleX();
+	float getMiddleY();
 private:
-	POINT_f cords[4];
-	wchar_t names[4][2] = { L"A",L"B",L"C",L"D" };
+	void fillTriangle(unsigned int* triangle, COLORREF color, HDC hdc);
+	float cords[4][3];
+	unsigned int polygons[2][3];
 };
 
 #endif 
